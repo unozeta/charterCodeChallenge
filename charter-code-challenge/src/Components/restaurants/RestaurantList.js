@@ -1,18 +1,22 @@
 import React from "react";
-import { getRestaurants } from "../../api/restaurantsApi";
 
 import Pagination from "../common/Pagination";
 
 class RestaurantList extends React.Component {
+
     state = {
         restaurants: [],
         currentRestaurants: [],
         currentPage: null,
         totalPages: null
     };
+    
+    componentDidUpdate(prevState) {
+        const { restaurants } = this.props;
+        if (prevState.restaurants !== restaurants) {
+            this.setState({ restaurants: restaurants });
+        };
 
-    componentDidMount() {
-        getRestaurants().then(restaurants => this.setState({ restaurants: restaurants }));
     }
 
     onPageChanged = data => {
@@ -46,30 +50,8 @@ class RestaurantList extends React.Component {
 
 
         return (
+
             <div className="container mb-5">
-                <div className="row d-flex flex-row py-5">
-                <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
-                    <div className="d-flex flex-row align-items-center">
-                    <h2 className={headerClass}>
-                        <strong className="text-secondary">{totalRestaurants}</strong>{" "}
-                        Restaurants
-                    </h2>
-                    {currentPage && (
-                        <span className="current-page d-inline-block h-100 pl-4 text-secondary">
-                        Page <span className="font-weight-bold">{currentPage}</span> /{" "}
-                        <span className="font-weight-bold">{totalPages}</span>
-                        </span>
-                    )}
-                    </div>
-                    <div className="d-flex flex-row py-4 align-items-center">
-                    <Pagination
-                        totalRecords={totalRestaurants}
-                        pageLimit={10}
-                        pageNeighbours={0}
-                        onPageChanged={this.onPageChanged}
-                    />
-                    </div>
-                </div>
 
                 <table className="table">
                     <thead>
@@ -96,6 +78,29 @@ class RestaurantList extends React.Component {
                     </tbody>
                 </table>
 
+                <div className="row d-flex flex-row py-2">
+                    <div className="w-100 px-4 py-2 d-flex flex-row flex-wrap align-items-center justify-content-between">
+                        <div className="d-flex flex-row align-items-center">
+                            <h4 className={headerClass}>
+                                <strong className="text-secondary">{totalRestaurants}</strong>{" "}
+                                Restaurants
+                            </h4>
+                            {currentPage && (
+                                <span className="current-page d-inline-block h-100 pl-4 text-secondary">
+                                Page <span className="font-weight-bold">{currentPage}</span> /{" "}
+                                <span className="font-weight-bold">{totalPages}</span>
+                                </span>
+                            )}
+                        </div>
+                        <div className="d-flex flex-row py-4 align-items-center">
+                            <Pagination
+                                totalRecords={totalRestaurants}
+                                pageLimit={10}
+                                pageNeighbours={0}
+                                onPageChanged={this.onPageChanged}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
             );

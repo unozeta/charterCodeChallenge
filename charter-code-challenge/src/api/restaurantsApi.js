@@ -12,6 +12,7 @@ export function getRestaurants() {
     .catch(handleError);
 }
 
+
 export function getRestaurantsBySlug(slug) {
   return fetch(baseUrl + "?slug=" + slug)
     .then(response => {
