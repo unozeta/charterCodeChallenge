@@ -43,7 +43,7 @@ class HomePage extends React.Component {
     }
 
     parseData(data) {
-        const { sorters, allRestaurants } = this.state;
+        const { sorters } = this.state;
         const { selectedOptions } = this.state;
 
         if (data && data.length) {
@@ -51,8 +51,6 @@ class HomePage extends React.Component {
           if (Array.isArray(selectedOptions) && selectedOptions.length) {
             selectedOptions.map(option => { data = data.filter(r => r.state === option);})
             //data = data.filter(r => r.state === 'FL');
-          } else {
-            data = allRestaurants;
           }
 
           if (Array.isArray(sorters) && sorters.length) {
