@@ -69,7 +69,7 @@ class RestaurantList extends React.Component {
           } = this.state;
           const totalRestaurants = restaurants.length;
       
-          if (totalRestaurants === 0) return null;
+          if (totalRestaurants === 0) return <h4>No Results were found !!!</h4>;
       
           const headerClass = [
             "text-dark py-2 pr-4 m-0",
