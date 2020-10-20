@@ -12,29 +12,41 @@ class RestaurantList extends React.Component {
         totalPages: null
     };
     
-    componentDidUpdate(prevState) {
+    async componentDidUpdate(prevState) {
         const { restaurants } = this.props;
 
         console.log(prevState.restaurants);
         console.log(restaurants);
 
         if (prevState.restaurants !== restaurants) {
-            this.setState({ restaurants: restaurants });
-            this.resetList( 1, 1, 10 );
+            await this.setState({ restaurants: restaurants });
+            await this.resetList( 1, 10 );
         };
 
     }
 
-    resetList = (currentPage, totalPages, pageLimit) => {
+    resetList = (currentPage, pageLimit) => {
+
         const { restaurants } = this.state;
-        //const { currentPage, totalPages, pageLimit } = data;
+
+        let totalRecords = restaurants.length;
+        console.log(totalRecords);
+        console.log(pageLimit);
+        let totalPages = Math.ceil(totalRecords / pageLimit);
+        console.log(totalPages);
 
         console.log(currentPage);
+        console.log(restaurants);
     
         const offset = (currentPage - 1) * pageLimit;
         const currentRestaurants = restaurants.slice(offset, offset + pageLimit);
-    
+        
+        console.log(currentRestaurants);
+
         this.setState({ currentPage, currentRestaurants, totalPages });
+
+        console.log(this.state);
+
       };
 
     onPageChanged = data => {
