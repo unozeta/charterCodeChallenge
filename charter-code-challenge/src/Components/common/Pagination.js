@@ -123,7 +123,7 @@ class Pagination extends Component {
 
     return (
       <Fragment>
-        <nav aria-label="Countries Pagination">
+        <nav aria-label="Restaurants Pagination">
           <ul className="pagination">
             {pages.map((page, index) => {
               if (page === LEFT_PAGE)
@@ -140,7 +140,7 @@ class Pagination extends Component {
                     </a>
                   </li>
                 );
-
+                https://github.com/KaterinaLupacheva/react-sorting-with-dropdown.git
               if (page === RIGHT_PAGE)
                 return (
                   <li key={index} className="page-item">
