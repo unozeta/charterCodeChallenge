@@ -38,6 +38,14 @@ class Pagination extends Component {
     this.gotoPage(1);
   }
 
+  componentDidUpdate(prevProps) {
+
+    if (prevProps.totalRecords !== this.props.totalRecords) {
+      this.totalPages = this.props.totalPages;
+    };
+
+  }
+
   gotoPage = page => {
     const { onPageChanged = f => f } = this.props;
 
@@ -69,6 +77,8 @@ class Pagination extends Component {
   };
 
   fetchPageNumbers = () => {
+
+    console.log(this);
     const totalPages = this.totalPages;
     const currentPage = this.state.currentPage;
     const pageNeighbours = this.pageNeighbours;
@@ -140,7 +150,7 @@ class Pagination extends Component {
                     </a>
                   </li>
                 );
-                https://github.com/KaterinaLupacheva/react-sorting-with-dropdown.git
+
               if (page === RIGHT_PAGE)
                 return (
                   <li key={index} className="page-item">
