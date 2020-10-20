@@ -1,4 +1,5 @@
 import React from "react";
+import { render } from "react-dom";
 
 import Pagination from "../common/Pagination";
 
@@ -13,11 +14,28 @@ class RestaurantList extends React.Component {
     
     componentDidUpdate(prevState) {
         const { restaurants } = this.props;
+
+        console.log(prevState.restaurants);
+        console.log(restaurants);
+
         if (prevState.restaurants !== restaurants) {
             this.setState({ restaurants: restaurants });
+            this.resetList( 1, 1, 10 );
         };
 
     }
+
+    resetList = (currentPage, totalPages, pageLimit) => {
+        const { restaurants } = this.state;
+        //const { currentPage, totalPages, pageLimit } = data;
+
+        console.log(currentPage);
+    
+        const offset = (currentPage - 1) * pageLimit;
+        const currentRestaurants = restaurants.slice(offset, offset + pageLimit);
+    
+        this.setState({ currentPage, currentRestaurants, totalPages });
+      };
 
     onPageChanged = data => {
         const { restaurants } = this.state;

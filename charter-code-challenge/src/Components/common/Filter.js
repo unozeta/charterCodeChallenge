@@ -1,4 +1,5 @@
-
+import React from "react";
+import '../../Style/Filter.css';
 const createStatesList = (...args) => {
     var statesList = [];
     args.map(restaurant => {
@@ -40,5 +41,37 @@ const createGenresList = (...args) => {
     return genresList.sort();
 }
 
+class FiltersList extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            checkedOptions: {},
+        }
+    }
+
+    render(){
+        const optionsList = this.props.optionsList;
+
+        console.log(optionsList);
+
+        const checkboxItems = optionsList.map((option, index) => 
+            <div className="check" key = {index}>
+            <label>
+                <input
+                    type="checkbox"
+                    value="{option}"
+                    onClick={e => this.props.onChange(option, e.checked)}
+                />
+                {option}
+            </label>
+            </div>
+        );
+        return (
+            <form >
+                {checkboxItems}
+            </form>
+        );
+    }
+}
   
-export { createStatesList,  createAttiresList, createGenresList };
+export { createStatesList,  createAttiresList, createGenresList, FiltersList };

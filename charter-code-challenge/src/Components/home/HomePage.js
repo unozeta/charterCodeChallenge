@@ -2,14 +2,15 @@ import React from "react";
 import Header from "../common/Header";
 import RestaurantList from "../restaurants/RestaurantList";
 import { getRestaurants } from "../../api/restaurantsApi";
-import { createStatesList,  createAttiresList, createGenresList } from '../common/Filter';
+import { createStatesList,  createAttiresList, createGenresList, FiltersList } from '../common/Filter';
 import { createSorter } from '../common/Sort';
 
 class HomePage extends React.Component {
 
     state = {
         restaurants: [],
-        filters: this.props.filters,
+        allRestaurants: [],
+        selectedOptions: [],
         sorters: this.props.sorters
     };
 
@@ -21,21 +22,35 @@ class HomePage extends React.Component {
           property: 'state'
         }]
 
+
       };
 
     componentDidMount() {
-        getRestaurants().then(restaurants => (this.setState({ restaurants: this.parseData(restaurants) })));
-        console.log(this.state.restaurants)
+        getRestaurants().then(restaurants => (this.setState({ allRestaurants: restaurants, restaurants: this.parseData(restaurants) })));
+
+    }
+
+    componentDidUpdate(prevState) {
+        const { restaurants, selectedOptions } = this.state;
+
+        console.log(prevState.restaurants);
+        console.log(restaurants);
+
+        if (prevState.restaurants && prevState.restaurants !== restaurants) {
+            this.setState({ restaurants: this.parseData(restaurants) });
+        };
+
     }
 
     parseData(data) {
         const { sorters } = this.state;
-        const { filters } = this.state;
+        const { selectedOptions } = this.state;
 
         if (data && data.length) {
 
-          if (Array.isArray(filters) && filters.length) {
-            data = data.filter(r => r.state === 'FL');
+          if (Array.isArray(selectedOptions) && selectedOptions.length) {
+            selectedOptions.map(option => { data = data.filter(r => r.state === option);})
+            //data = data.filter(r => r.state === 'FL');
           }
 
           if (Array.isArray(sorters) && sorters.length) {
@@ -45,25 +60,8 @@ class HomePage extends React.Component {
     
         console.log(data);
 
-        let States = createStatesList(data);
-        console.log(States);
-
-        let Attires = createAttiresList(data);
-        console.log(Attires);
-
-        let Genres = createGenresList(data);
-        console.log(Genres);
-
         return data;
       }
-
-    // componentDidUpdate(prevState) {
-    //     const { restaurants } = this.props;
-    //     if (prevState.restaurants !== restaurants) {
-    //         this.sortList("name"); 
-    //     };
-
-    // }
 
     compareBy = (key) => {
         return function(a, b) {
@@ -80,10 +78,46 @@ class HomePage extends React.Component {
         this.setState({ users: arrayCopy });
     };
 
+    handleOnChange(option) {
+
+        const { restaurants, selectedOptions } = this.state;
+
+        console.log(option);
+        console.log(selectedOptions);
+
+        if (!selectedOptions.includes(option)) {
+
+            selectedOptions.push(option);
+            console.log(selectedOptions);
+            this.setState({ selectedOptions: selectedOptions})
+
+        } else {
+
+            var index = selectedOptions.indexOf(option);
+            if (index >= 0) {
+                selectedOptions.splice( index, 1 );
+            }
+            console.log(selectedOptions);
+            this.setState({ selectedOptions: selectedOptions})
+
+        }
+        console.log(this.state.selectedOptions)
+        this.setState({ restaurants: this.parseData(restaurants) });
+    }
+
     render() {
 
-        const { restaurants } = this.state;
+        const { allRestaurants, restaurants } = this.state;
         console.log(restaurants);
+        console.log(allRestaurants);
+        let statesList = createStatesList(allRestaurants);
+        let attiresList = createAttiresList(allRestaurants);
+        let genresList = createGenresList(allRestaurants);
+
+        console.log(statesList);
+        console.log(attiresList);
+        console.log(genresList);
+
 
         return (
             <div>
@@ -91,6 +125,14 @@ class HomePage extends React.Component {
             
             <div>
                 <h3>List of Restaurants</h3>
+            </div>
+            <div className="filter-section">
+                    <h6>Filter by State:</h6>
+                    <FiltersList optionsList = {statesList} onChange={this.handleOnChange.bind(this)}/>
+            </div>
+            <div className="filter-section">
+                    <h6>Filter by Genres:</h6>
+                    <FiltersList optionsList = {genresList} onChange={this.handleOnChange.bind(this)}/>
             </div>
 
             <RestaurantList restaurants={restaurants} />
